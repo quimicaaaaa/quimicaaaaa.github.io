@@ -583,6 +583,57 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(45deg, var(--secondary), var(--accent));
         }
+
+        /* Introdução específica */
+        .intro-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: justify;
+            margin: 30px 0;
+        }
+
+        .intro-highlight {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        /* Conclusão específica */
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .conclusion-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 35px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+        }
+
+        .conclusion-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 25px 50px rgba(0, 255, 255, 0.2);
+        }
+
+        .thanks-animation {
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s ease-in-out infinite;
+            margin: 50px 0;
+        }
     </style>
 </head>
 <body>
@@ -592,12 +643,14 @@
     <!-- Navigation -->
     <div class="nav">
         <div class="nav-dot active" data-section="hero"></div>
+        <div class="nav-dot" data-section="introduction"></div>
         <div class="nav-dot" data-section="structure"></div>
         <div class="nav-dot" data-section="nomenclature"></div>
         <div class="nav-dot" data-section="effects"></div>
         <div class="nav-dot" data-section="applications"></div>
         <div class="nav-dot" data-section="curiosities"></div>
         <div class="nav-dot" data-section="stats"></div>
+        <div class="nav-dot" data-section="conclusion"></div>
     </div>
 
     <!-- Hero Section -->
@@ -608,6 +661,33 @@
             <div class="scroll-indicator">
                 <span>Explore</span>
             </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="section" id="introduction">
+        <h2>🌱 Introdução</h2>
+        <div class="intro-text">
+            <p>
+                A <span class="intro-highlight">nicotina</span> representa um dos compostos químicos mais estudados e controversos da história da ciência. 
+                Descoberta em 1828 pelos químicos alemães Wilhelm Heinrich Posselt e Karl Ludwig Reimann, esta substância alcaloide tem 
+                desempenhado papéis fundamentais tanto na medicina quanto na agricultura, enquanto simultaneamente se tornou um dos principais 
+                desafios de saúde pública mundial.
+            </p>
+            <br>
+            <p>
+                Naturalmente produzida pela planta do tabaco (<em>Nicotiana tabacum</em>) como mecanismo de defesa contra herbívoros, 
+                a nicotina evoluiu para se tornar uma das <span class="intro-highlight">substâncias psicoativas mais potentes</span> conhecidas pela humanidade. 
+                Sua capacidade de atravessar a barreira hematoencefálica e interagir com receptores neurais específicos a tornou objeto 
+                de intensas pesquisas farmacológicas e neurobiológicas.
+            </p>
+            <br>
+            <p>
+                Este trabalho apresenta uma análise científica abrangente da nicotina, explorando desde sua <span class="intro-highlight">estrutura molecular complexa</span> 
+                até suas aplicações terapêuticas modernas, passando por seus mecanismos de ação, efeitos fisiológicos e implicações 
+                socioeconômicas. Através de uma abordagem multidisciplinar, examinaremos como este composto de fórmula C₁₀H₁₄N₂ 
+                continua a influenciar campos tão diversos quanto a neurociência, farmacologia, agricultura e políticas de saúde pública.
+            </p>
         </div>
     </section>
 
@@ -816,185 +896,73 @@
         </div>
     </section>
 
-    <script>
-        // Animação das partículas
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
+    <!-- Conclusion Section -->
+    <section class="section" id="conclusion">
+        <h2>🎓 Conclusão</h2>
+        
+        <div class="intro-text">
+            <p>
+                A análise abrangente da <span class="intro-highlight">nicotina</span> revela a complexidade fascinante de um dos compostos 
+                mais estudados da química moderna. Desde sua descoberta em 1828 até as pesquisas contemporâneas em neurociência, 
+                este alcaloide bicíclico continua a desafiar nossa compreensão sobre a interação entre química e biologia.
+            </p>
+        </div>
 
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Interação com molécula 3D
-        const molecule3d = document.getElementById('molecule3d');
-        const moleculeContainer = molecule3d.querySelector('.molecule-container');
-        let isMouseDown = false;
-        let startX, startY, rotationX = 0, rotationY = 0;
-
-        molecule3d.addEventListener('mousedown', (e) => {
-            isMouseDown = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            moleculeContainer.style.animationPlayState = 'paused';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isMouseDown) return;
+        <div class="conclusion-grid">
+            <div class="conclusion-card">
+                <h3>🔬 Perspectiva Científica</h3>
+                <p>
+                    A estrutura molecular única da nicotina (C₁₀H₁₄N₂) e sua capacidade de atravessar a barreira hematoencefálica 
+                    em segundos demonstram como a arquitetura química determina função biológica. Seus receptores específicos 
+                    e mecanismos de ação continuam inspirando o desenvolvimento de novos fármacos neurológicos.
+                </p>
+            </div>
             
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
+            <div class="conclusion-card">
+                <h3>⚖️ Dualidade Terapêutica</h3>
+                <p>
+                    O paradoxo da nicotina reside em seu potencial tanto benéfico quanto prejudicial. Enquanto oferece esperança 
+                    para tratamentos de Alzheimer e Parkinson, sua natureza altamente viciante representa um dos maiores desafios 
+                    de saúde pública mundial, exigindo abordagens equilibradas entre pesquisa e regulamentação.
+                </p>
+            </div>
             
-            rotationY += deltaX * 0.5;
-            rotationX -= deltaY * 0.5;
+            <div class="conclusion-card">
+                <h3>🚀 Futuro da Pesquisa</h3>
+                <p>
+                    As aplicações futuras da nicotina prometem revolucionar campos desde a agricultura sustentável até a neuroterápia. 
+                    O desenvolvimento de agonistas nicotínicos sintéticos pode preservar benefícios terapêuticos enquanto minimiza 
+                    riscos de dependência, abrindo novos horizontes para a medicina personalizada.
+                </p>
+            </div>
             
-            moleculeContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-            
-            startX = e.clientX;
-            startY = e.clientY;
-        });
+            <div class="conclusion-card">
+                <h3>🌍 Impacto Societal</h3>
+                <p>
+                    Compreender a nicotina transcende a química pura, influenciando políticas públicas, economia global e qualidade 
+                    de vida. A educação científica sobre seus mecanismos de ação é fundamental para decisões informadas tanto em 
+                    níveis individuais quanto societais.
+                </p>
+            </div>
+        </div>
 
-        document.addEventListener('mouseup', () => {
-            isMouseDown = false;
-            setTimeout(() => {
-                moleculeContainer.style.animationPlayState = 'running';
-            }, 2000);
-        });
+        <div style="background: rgba(0,255,255,0.1); padding: 40px; border-radius: 20px; margin: 40px 0; text-align: center; border: 2px solid var(--primary);">
+            <p style="font-size: 1.2rem; line-height: 1.6; font-style: italic;">
+                "A nicotina exemplifica como um único composto químico pode simultaneamente representar esperança e desafio, 
+                terapia e toxicidade, inovação científica e responsabilidade social. Seu estudo continuado não apenas expande 
+                nosso conhecimento químico, mas também nos ensina sobre a importância da pesquisa responsável e da aplicação 
+                ética do conhecimento científico."
+            </p>
+        </div>
 
-        // Navegação suave
-        const navDots = document.querySelectorAll('.nav-dot');
-        const sections = document.querySelectorAll('section');
-
-        navDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                sections[index].scrollIntoView({ behavior: 'smooth' });
-                navDots.forEach(d => d.classList.remove('active'));
-                dot.classList.add('active');
-            });
-        });
-
-        // Observer para navegação ativa
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const index = Array.from(sections).indexOf(entry.target);
-                    navDots.forEach(dot => dot.classList.remove('active'));
-                    if (navDots[index]) navDots[index].classList.add('active');
-                }
-            });
-        }, { threshold: 0.5 });
-
-        sections.forEach(section => observer.observe(section));
-
-        // Animação de contador para estatísticas
-        const animateCounters = () => {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const finalValue = stat.textContent;
-                const isNumeric = !isNaN(parseFloat(finalValue));
-                
-                if (isNumeric) {
-                    const numValue = parseFloat(finalValue);
-                    let currentValue = 0;
-                    const increment = numValue / 60;
-                    
-                    const counter = setInterval(() => {
-                        currentValue += increment;
-                        if (currentValue >= numValue) {
-                            stat.textContent = finalValue;
-                            clearInterval(counter);
-                        } else {
-                            stat.textContent = currentValue.toFixed(2);
-                        }
-                    }, 50);
-                }
-            });
-        };
-
-        // Observer para animações
-        const animationObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                    if (entry.target.id === 'stats') {
-                        setTimeout(animateCounters, 500);
-                    }
-                }
-            });
-        }, { threshold: 0.3 });
-
-        document.querySelectorAll('.section').forEach(section => {
-            animationObserver.observe(section);
-        });
-
-        // Efeitos de hover avançados para cards
-        document.querySelectorAll('.info-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 10;
-                const rotateY = (centerX - x) / 10;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-            });
-        });
-
-        // Parallax para hero
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.getElementById('hero');
-            const parallaxSpeed = scrolled * 0.3;
-            hero.style.transform = `translateY(${parallaxSpeed}px)`;
-            
-            // Efeito fade para hero content
-            const heroContent = hero.querySelector('.hero-content');
-            const opacity = 1 - (scrolled / window.innerHeight);
-            heroContent.style.opacity = Math.max(0, opacity);
-        });
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            
-            // Animação de entrada para elementos
-            setTimeout(() => {
-                document.querySelectorAll('.section').forEach((section, index) => {
-                    setTimeout(() => {
-                        section.style.opacity = '1';
-                        section.style.transform = 'translateY(0)';
-                    }, index * 200);
-                });
-            }, 500);
-        });
-
-        // Easter egg - triplo clique na molécula
-        let clickCount = 0;
-        molecule3d.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount === 3) {
-                moleculeContainer.style.animation = 'spin3d 1s linear infinite';
-                setTimeout(() => {
-                    moleculeContainer.style.animation = 'spin3d 20s linear infinite';
-                    clickCount = 0;
-                }, 3000);
-            }
-            setTimeout(() => clickCount = 0, 1000);
-        });
-    </script>
-</body>
-</html>
+        <div class="thanks-animation">
+            🧬 OBRIGADO PELA ATENÇÃO! 🧬
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <p style="font-size: 1.1rem; opacity: 0.8;">
+                <strong>Apresentação desenvolvida para fins educacionais</strong><br>
+                Química Orgânica • Estrutura Molecular • Farmacologia
+            </p>
+        </div>
+    </section>
