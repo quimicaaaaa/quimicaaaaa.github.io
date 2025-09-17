@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nicotina - Apresentação Química Interativa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ffff;
+            --secondary: #ff006e;
+            --accent: #ffd60a;
+            --dark: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 80%, #120458 0%, #000000 50%), 
+                        radial-gradient(circle at 80% 20%, #8b5cf6 0%, #000000 50%),
+                        radial-gradient(circle at 40% 40%, #00ffff 0%, transparent 50%);
+            background-attachment: fixed;
+            color: white;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float-particle 20s infinite linear;
+            box-shadow: var(--glow) var(--primary);
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(0,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            z-index: 10;
+            perspective: 1000px;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s ease-in-out infinite, levitate 4s ease-in-out infinite;
+            text-shadow: var(--glow) var(--primary);
+            transform-style: preserve-3d;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-20px) rotateX(10deg); }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1rem, 3vw, 2rem);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: slideUpFade 1s ease-out 1s forwards;
+            background: linear-gradient(90deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes slideUpFade {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* 3D Molecule Viewer */
+        .molecule-3d {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            margin: 40px auto;
+            perspective: 1000px;
+            cursor: grab;
+        }
+
+        .molecule-3d:active {
+            cursor: grabbing;
+        }
+
+        .molecule-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spin3d 20s linear infinite;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes spin3d {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .atom-3d {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.3), var(--glow) currentColor;
+            animation: pulse-atom 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-atom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .carbon-3d { 
+            width: 40px; height: 40px; 
+            background: radial-gradient(circle, #333, #000); 
+            color: white;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(50px);
+        }
+
+        .nitrogen-3d { 
+            width: 35px; height: 35px; 
+            background: radial-gradient(circle, var(--primary), #0066cc); 
+            color: white;
+            top: 30%; left: 30%;
+            transform: translate(-50%, -50%) translateZ(-30px);
+        }
+
+        .hydrogen-3d { 
+            width: 25px; height: 25px; 
+            background: radial-gradient(circle, #fff, #ccc); 
+            color: #000;
+            font-size: 12px;
+        }
+
+        .bond {
+            position: absolute;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            height: 3px;
+            border-radius: 2px;
+            box-shadow: var(--glow) var(--accent);
+            animation: glow-bond 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-bond {
+            from { box-shadow: 0 0 10px var(--accent); }
+            to { box-shadow: 0 0 20px var(--accent), 0 0 30px var(--primary); }
+        }
+
+        /* Glassmorphism Sections */
+        .section {
+            margin: 100px auto;
+            max-width: 1200px;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInView 0.8s ease-out;
+        }
+
+        .section:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 40px 80px rgba(0, 255, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes slideInView {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            box-shadow: var(--glow) var(--primary);
+        }
+
+        /* Interactive Formula */
+        .formula-interactive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+        }
+
+        .molecular-formula {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: scale-pulse 2s ease-in-out infinite;
+            margin: 20px 0;
+        }
+
+        @keyframes scale-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .structural-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid var(--accent);
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .structural-formula:hover {
+            box-shadow: inset 0 0 30px rgba(255, 215, 0, 0.2), var(--glow) var(--accent);
+        }
+
+        /* Advanced Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 25px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,255,255,0.1), transparent);
+            animation: rotate-gradient 4s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate-gradient {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .info-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(0, 255, 255, 0.3);
+        }
+
+        .info-card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card li {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .info-card li:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-left-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .benefits { border-image: linear-gradient(45deg, #4ecdc4, #44a08d) 1; }
+        .risks { border-image: linear-gradient(45deg, #ff6b6b, #ee5a52) 1; }
+        .curiosities { border-image: linear-gradient(45deg, var(--accent), #f9ca24) 1; }
+        .applications { border-image: linear-gradient(45deg, #a8e6cf, #88d8c0) 1; }
+
+        /* Statistics Dashboard */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: translateX(-100%);
+            animation: progress-bar 3s ease-in-out infinite;
+        }
+
+        @keyframes progress-bar {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+        }
+
+        .stat-card:hover {
+            transform: rotateY(15deg);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 10px;
+            animation: counter 2s ease-out;
+        }
+
+        @keyframes counter {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Warning Alert */
+        .warning {
+            background: linear-gradient(135deg, rgba(255,0,110,0.2), rgba(255,107,107,0.2));
+            border: 3px solid var(--secondary);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: warning-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes warning-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,110,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,0,110,0.6), 0 0 60px rgba(255,0,110,0.3); }
+        }
+
+        .warning::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: bounce-warning 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce-warning {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .warning h3 {
+            color: var(--secondary);
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--primary);
+            box-shadow: var(--glow) var(--primary);
+            transform: scale(1.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section { padding: 40px 20px; margin: 50px 20px; }
+            .molecule-3d { width: 300px; height: 300px; }
+            .hero h1 { font-size: 3rem; }
+            .info-grid { grid-template-columns: 1fr; gap: 30px; }
+            .stats-dashboard { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <div class="nav">
+        <div class="nav-dot active" data-section="hero"></div>
+        <div class="nav-dot" data-section="structure"></div>
+        <div class="nav-dot" data-section="nomenclature"></div>
+        <div class="nav-dot" data-section="effects"></div>
+        <div class="nav-dot" data-section="applications"></div>
+        <div class="nav-dot" data-section="curiosities"></div>
+        <div class="nav-dot" data-section="stats"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>NICOTINA</h1>
+            <p class="subtitle">Alcaloide Fascinante do Século XXI</p>
+            <div class="scroll-indicator">
+                <span>Explore</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Structure Section -->
+    <section class="section" id="structure">
+        <h2>🧬 Estrutura Molecular 3D</h2>
+        
+        <div class="molecule-3d" id="molecule3d">
+            <div class="molecule-container">
+                <div class="atom-3d carbon-3d">C</div>
+                <div class="atom-3d nitrogen-3d">N</div>
+                <div class="atom-3d hydrogen-3d" style="top: 20%; left: 70%; transform: translateZ(20px);">H</div>
+                <div class="atom-3d hydrogen-3d" style="top: 70%; left: 20%; transform: translateZ(-40px);">H</div>
+                <div class="atom-3d hydrogen-3d" style="top: 80%; left: 80%; transform: translateZ(10px);">H</div>
+                <div class="bond" style="top: 45%; left: 35%; width: 80px; transform: rotate(45deg);"></div>
+                <div class="bond" style="top: 55%; left: 45%; width: 60px; transform: rotate(-30deg);"></div>
+            </div>
+        </div>
+
+        <div class="formula-interactive">
+            <div class="formula-card">
+                <h3>Fórmula Molecular</h3>
+                <div class="molecular-formula">C₁₀H₁₄N₂</div>
+                <p>Massa Molecular: <strong>162.23 g/mol</strong></p>
+            </div>
+            <div class="formula-card">
+                <h3>Estrutura Química</h3>
+                <div class="structural-formula">
+                    <strong>Estrutura Bicíclica:</strong><br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;HC&nbsp;&nbsp;&nbsp;&nbsp;CH<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;HC&nbsp;&nbsp;&nbsp;&nbsp;CH<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ &nbsp;&nbsp;/<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C—CH₂—CH₂<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N(CH₃)<br><br>
+                    <em>🔬 Anel piridínico + anel pirrolidínico</em>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nomenclature Section -->
+    <section class="section" id="nomenclature">
+        <h2>📋 Nomenclatura Química</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>🧪 Nome IUPAC</h3>
+                <div style="background: rgba(0,255,255,0.1); padding: 20px; border-radius: 15px; font-size: 1.3rem; font-weight: bold; color: var(--primary); margin: 20px 0;">
+                    3-(1-metilpirrolidin-2-il)piridina
+                </div>
+                <p><strong>Explicação:</strong> Nome sistemático oficial baseado na estrutura química</p>
+            </div>
+            <div class="info-card">
+                <h3>🏷️ Nomes Comerciais</h3>
+                <ul>
+                    <li><strong>Nicotina</strong> - Nome comum universal</li>
+                    <li><strong>Tabacina</strong> - Denominação histórica</li>
+                    <li><strong>(-)-Nicotina</strong> - Forma natural levógira</li>
+                    <li><strong>3-(1-Metil-2-pirrolidinil)piridina</strong> - Variação nomenclatura</li>
+                    <li><strong>1-Metil-2-(3-piridinil)pirrolidina</strong> - Nome alternativo</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Effects Section -->
+    <section class="section" id="effects">
+        <h2>⚖️ Efeitos no Organismo</h2>
+        <div class="info-grid">
+            <div class="info-card benefits">
+                <h3>✅ Benefícios Potenciais</h3>
+                <ul>
+                    <li><strong>🧠 Neuroproteção:</strong> Pode proteger contra Parkinson e Alzheimer</li>
+                    <li><strong>🎯 Concentração:</strong> Melhora temporária do foco e atenção</li>
+                    <li><strong>⚖️ Controle de peso:</strong> Suprime o apetite naturalmente</li>
+                    <li><strong>🔬 Pesquisa médica:</strong> Base para medicamentos neurológicos</li>
+                    <li><strong>💊 Terapêutica:</strong> Tratamento de alguns transtornos mentais</li>
+                    <li><strong>⚡ Estimulação:</strong> Aumenta alerta e reduz fadiga</li>
+                    <li><strong>🧬 Neuroprotção:</strong> Estimula fatores de crescimento neural</li>
+                </ul>
+            </div>
+            
+            <div class="info-card risks">
+                <h3>❌ Riscos e Malefícios</h3>
+                <ul>
+                    <li><strong>🔒 Dependência extrema:</strong> Altamente viciante (similar à heroína)</li>
+                    <li><strong>❤️ Cardiovascular:</strong> Aumenta pressão arterial e frequência cardíaca</li>
+                    <li><strong>🫁 Sistema respiratório:</strong> Problemas pulmonares (via tabaco)</li>
+                    <li><strong>🦠 Carcinogênico:</strong> Risco elevado de câncer</li>
+                    <li><strong>☠️ Toxicidade aguda:</strong> Dose letal: 0.5-1mg/kg</li>
+                    <li><strong>🤱 Gravidez:</strong> Prejudica desenvolvimento fetal</li>
+                    <li><strong>🧠 Adolescentes:</strong> Afeta desenvolvimento cerebral</li>
+                    <li><strong>💔 Vascular:</strong> Aterosclerose e trombose</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning">
+            <h3>ALERTA CIENTÍFICO</h3>
+            <p>A nicotina é uma das substâncias mais viciantes conhecidas pela ciência. Seus riscos superam dramaticamente qualquer benefício potencial quando consumida através do tabaco. Use apenas sob supervisão médica em terapias de reposição.</p>
+        </div>
+    </section>
+
+    <!-- Applications Section -->
+    <section class="section" id="applications">
+        <h2>🎯 Aplicações Científicas</h2>
+        <div class="info-grid">
+            <div class="info-card applications">
+                <h3>🏥 Aplicações Médicas</h3>
+                <ul>
+                    <li><strong>🩹 Terapia de reposição:</strong> Adesivos e gomas para cessação</li>
+                    <li><strong>💉 Sprays nasais:</strong> Absorção rápida controlada</li>
+                    <li><strong>💊 Medicamentos:</strong> Base para fármacos neurológicos</li>
+                    <li><strong>🧬 Pesquisa Alzheimer:</strong> Estudos de neuroproteção</li>
+                    <li><strong>🔬 Pesquisa Parkinson:</strong> Efeitos dopaminérgicos</li>
+                    <li><strong>🧪 Farmacologia:</strong> Desenvolvimento de agonistas nicotínicos</li>
+                </ul>
+            </div>
+            
+            <div class="info-card applications">
+                <h3>🏭 Aplicações Industriais</h3>
+                <ul>
+                    <li><strong>🐛 Bioinseticida:</strong> Controle natural de pragas</li>
+                    <li><strong>🔬 Pesquisa:</strong> Estudos de receptores neurais</li>
+                    <li><strong>💼 Farmacêutica:</strong> Síntese de medicamentos</li>
+                    <li><strong>🌱 Agricultura:</strong> Defensivo orgânico certificado</li>
+                    <li><strong>🧬 Biotecnologia:</strong> Estudos de neurobiologia</li>
+                    <li><strong>⚗️ Química analítica:</strong> Padrão de referência</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curiosities Section -->
+    <section class="section" id="curiosities">
+        <h2>🤯 Curiosidades Fascinantes</h2>
+        <div class="info-card curiosities">
+            <ul>
+                <li><strong>👨‍💼 Origem do nome:</strong> Jean Nicot, embaixador francês que levou tabaco para a França em 1560</li>
+                <li><strong>🔬 Descoberta histórica:</strong> Isolada em 1828 por Posselt e Reimann na Alemanha</li>
+                <li><strong>🌿 Defesa vegetal:</strong> Planta do tabaco produz nicotina contra insetos herbívoros</li>
+                <li><strong>⚡ Velocidade extrema:</strong> Atinge o cérebro em apenas 10-20 segundos via inalação</li>
+                <li><strong>💀 Toxicidade:</strong> 30-60mg podem ser letais para adultos (2-3 cigarros puros)</li>
+                <li><strong>⏱️ Meia-vida curta:</strong> 1-2 horas no sangue, mas efeitos duram mais tempo</li>
+                <li><strong>🧠 Receptores únicos:</strong> Atua em receptores nicotínicos da acetilcolina</li>
+                <li><strong>🍅 Presente naturalmente:</strong> Tomates, batatas, berinjelas (quantidades ínfimas)</li>
+                <li><strong>🐒 Evolução:</strong> Humanos desenvolveram receptores há milhões de anos</li>
+                <li><strong>🔥 Ponto de ignição:</strong> 244°C - por isso funciona em cigarros</li>
+                <li><strong>🌡️ Estabilidade:</strong> Degrada-se rapidamente na luz UV</li>
+                <li><strong>🧪 Quiralidade:</strong> Forma natural é levógira [(-)-nicotina]</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="section" id="stats">
+        <h2>📊 Dados Técnicos Avançados</h2>
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <span class="stat-number">162.23</span>
+                <span>Massa Molecular (g/mol)</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">247°C</span>
+                <span>Ponto de Ebulição</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">-79°C</span>
+                <span>Ponto de Fusão</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">1.01</span>
+                <span>Densidade (g/cm³)</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">8.02</span>
+                <span>pKa (basicidade)</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">1.17</span>
+                <span>Log P (lipofilia)</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">10-20</span>
+                <span>Segundos para cérebro</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">95%</span>
+                <span>Absorção pulmonar</span>
+            </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); padding: 40px; border-radius: 20px; margin: 40px 0;">
+            <h3 style="text-align: center; color: var(--accent); font-family: 'Orbitron', monospace; margin-bottom: 30px;">⚗️ Propriedades Físico-Químicas</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div><strong>Solubilidade em água:</strong> Totalmente miscível</div>
+                <div><strong>pH em solução:</strong> Básico (8.5)</div>
+                <div><strong>Coeficiente de partição:</strong> Lipofílica moderada</div>
+                <div><strong>Estabilidade:</strong> Sensível à luz e calor</div>
+                <div><strong>Estado físico:</strong> Líquido oleoso incolor</div>
+                <div><strong>Odor:</strong> Característico de peixe/amônia</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animação das partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Interação com molécula 3D
+        const molecule3d = document.getElementById('molecule3d');
+        const moleculeContainer = molecule3d.querySelector('.molecule-container');
+        let isMouseDown = false;
+        let startX, startY, rotationX = 0, rotationY = 0;
+
+        molecule3d.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            moleculeContainer.style.animationPlayState = 'paused';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isMouseDown) return;
+            
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            
+            rotationY += deltaX * 0.5;
+            rotationX -= deltaY * 0.5;
+            
+            moleculeContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
+            setTimeout(() => {
+                moleculeContainer.style.animationPlayState = 'running';
+            }, 2000);
+        });
+
+        // Navegação suave
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('section');
+
+        navDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+                navDots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+            });
+        });
+
+        // Observer para navegação ativa
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = Array.from(sections).indexOf(entry.target);
+                    navDots.forEach(dot => dot.classList.remove('active'));
+                    if (navDots[index]) navDots[index].classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Animação de contador para estatísticas
+        const animateCounters = () => {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const finalValue = stat.textContent;
+                const isNumeric = !isNaN(parseFloat(finalValue));
+                
+                if (isNumeric) {
+                    const numValue = parseFloat(finalValue);
+                    let currentValue = 0;
+                    const increment = numValue / 60;
+                    
+                    const counter = setInterval(() => {
+                        currentValue += increment;
+                        if (currentValue >= numValue) {
+                            stat.textContent = finalValue;
+                            clearInterval(counter);
+                        } else {
+                            stat.textContent = currentValue.toFixed(2);
+                        }
+                    }, 50);
+                }
+            });
+        };
+
+        // Observer para animações
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    if (entry.target.id === 'stats') {
+                        setTimeout(animateCounters, 500);
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.section').forEach(section => {
+            animationObserver.observe(section);
+        });
+
+        // Efeitos de hover avançados para cards
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            });
+        });
+
+        // Parallax para hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero');
+            const parallaxSpeed = scrolled * 0.3;
+            hero.style.transform = `translateY(${parallaxSpeed}px)`;
+            
+            // Efeito fade para hero content
+            const heroContent = hero.querySelector('.hero-content');
+            const opacity = 1 - (scrolled / window.innerHeight);
+            heroContent.style.opacity = Math.max(0, opacity);
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // Animação de entrada para elementos
+            setTimeout(() => {
+                document.querySelectorAll('.section').forEach((section, index) => {
+                    setTimeout(() => {
+                        section.style.opacity = '1';
+                        section.style.transform = 'translateY(0)';
+                    }, index * 200);
+                });
+            }, 500);
+        });
+
+        // Easter egg - triplo clique na molécula
+        let clickCount = 0;
+        molecule3d.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 3) {
+                moleculeContainer.style.animation = 'spin3d 1s linear infinite';
+                setTimeout(() => {
+                    moleculeContainer.style.animation = 'spin3d 20s linear infinite';
+                    clickCount = 0;
+                }, 3000);
+            }
+            setTimeout(() => clickCount = 0, 1000);
+        });
+    </script>
+</body>
+</html>
