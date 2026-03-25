@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Demo Cibersegurança - QR Code Malware</title>
+    <title>Demo Cibersegurança - Imagem Flutuante em AR</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   
   <body style="margin: 0px; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
       
+      <a-assets>
+        <img id="btnBanco" src="botao_banco.png">
+      </a-assets>
+
       <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
       <a-marker type="pattern" url="marker.patt">
         
-        <a-plane position="0 0 0" rotation="-90 0 0" width="2.8" height="1.5" color="#1e375a" material="opacity: 0.9;">
-          <a-text value="OFERTA EXCLUSIVA: GEMAS" align="center" position="0 0.5 0.1" scale="0.6 0.6 0.6" color="#f1c40f"></a-text>
-          
-          <a-plane position="0 -0.3 0.05" width="2.2" height="0.6" color="#c0392b">
-             <a-text value="COMPRAR POR R$ 100,00" align="center" position="0 0 0.05" scale="0.8 0.8 0.8" color="white"></a-text>
-          </a-plane>
-        </a-plane>
+        <a-image src="#btnBanco" 
+                 position="0 0.5 0" 
+                 rotation="-90 0 0" 
+                 width="2.5" 
+                 height="0.8">
+        </a-image>
 
         <a-plane id="malicious-overlay" 
                  class="clickable"
-                 position="0 0.1 0" 
+                 position="0 0.55 0" 
                  rotation="-90 0 0" 
-                 width="2.9" height="1.6" 
-                 material="opacity: 0.2; color: #ff0000"
-                 animation="property: material.opacity; from: 0.1; to: 0.4; dur: 1200; dir: alternate; loop: true"
+                 width="2.6" 
+                 height="0.9" 
+                 material="opacity: 0.3; color: #ff0000"
+                 animation="property: material.opacity; from: 0.1; to: 0.5; dur: 800; dir: alternate; loop: true"
                  onclick="showHackAlert()">
           
-          <a-text value="[VERIFICADO PELA LOJA]" align="center" position="0 -0.7 0.1" scale="0.4 0.4 0.4" color="#ff4444"></a-text>
-          
-          <a-circle color="white" radius="0.1" position="1.3 0.65 0.1">
-              <a-text value="X" color="black" align="center" position="0 0 0.01" scale="0.6 0.6 0.6"></a-text>
-          </a-circle>
+          <a-text value="[CONEXAO SEGURA ATIVA]" align="center" position="0 -0.5 0.1" scale="0.4 0.4 0.4" color="#ff4444"></a-text>
         </a-plane>
         
       </a-marker>
@@ -44,8 +44,7 @@
 
     <script>
       function showHackAlert() {
-        // Alerta final explicando a fraude do QR Code
-        alert("⚠️ SEGURANÇA VIOLADA!\n\nO QR Code que você escaneou não era apenas um link, era o próprio gatilho do ataque.\n\nEste é um exemplo de 'QRishing' (QR Phishing) combinado com AR Overlay. O atacante roubou seu clique e seus dados financeiros simularam o envio.");
+        alert("⚠️ ATAQUE DE OVERLAY CONFIRMADO!\n\nA interface bancária flutuante é real, mas você interagiu com uma camada maliciosa invisível que sobrepõe a imagem legítima.\n\nEste é um exemplo clássico de 'AR Overlay Attack' em cibersegurança.");
       }
     </script>
   </body>
