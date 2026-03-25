@@ -15,21 +15,21 @@
 
       <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
-<a-marker type="pattern" url="marker.patt">
+      <a-marker type="pattern" url="marker.patt">
         
         <a-image src="#btnBanco" 
                  position="0 0.5 0" 
                  rotation="-90 0 0" 
-                 width="1.0" 
-                 height="0.9">
+                 width="2.0" 
+                 height="0.8">
         </a-image>
 
         <a-plane id="malicious-overlay" 
                  class="clickable"
                  position="0 0.55 0" 
                  rotation="-90 0 0" 
-                 width="2.2" 
-                 height="0.8" 
+                 width="2.6" 
+                 height="0.9" 
                  material="opacity: 0.3; color: #ff0000"
                  animation="property: material.opacity; from: 0.1; to: 0.5; dur: 800; dir: alternate; loop: true"
                  onclick="showHackAlert()">
