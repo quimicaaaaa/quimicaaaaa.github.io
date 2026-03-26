@@ -13,32 +13,38 @@
         <img id="btnBanco" src="botao_banco2.png">
       </a-assets>
 
-      <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+      <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable; interval: 10"></a-entity>
 
       <a-marker type="pattern" url="marker.patt">
         
-        <a-image id="btn-orig" src="#btnBanco" position="0 0.5 0" rotation="-90 0 0" width="2.5" height="3.0"></a-image>
+        <a-image id="btn-orig" src="#btnBanco" position="0 0.1 0" rotation="-90 0 0" width="2.5" height="3.0"></a-image>
 
-        <a-plane id="malicious-overlay" class="clickable" position="0 0.55 0" rotation="-90 0 0" 
-                 width="2.5" height="3.0" material="opacity: 0.3; color: red" onclick="abrirPainel()">
+        <a-plane id="malicious-overlay" class="clickable" position="0 0.15 0" rotation="-90 0 0" 
+                 width="2.6" height="3.1" material="opacity: 0.3; color: red" onclick="abrirPainel()">
         </a-plane>
 
-        <a-entity id="fake-form" position="0 1.5 -0.8" rotation="-90 0 0" visible="false">
-          <a-plane width="2.5" height="3.0" color="#111" material="opacity: 0.9">
-            <a-text value="CONFIRME SEU PIN" align="center" position="0 0.8 0.1" scale="0.6 0.6 0.6" color="white"></a-text>
+        <a-entity id="fake-form" position="0 1.0 -1.0" rotation="-90 0 0" visible="false">
+          <a-plane width="2.8" height="3.2" color="#111" material="opacity: 0.95">
+            <a-text value="CONFIRME SEU PIN" align="center" position="0 1.2 0.1" scale="0.6 0.6 0.6" color="white"></a-text>
             
-            <a-plane position="0 0.3 0.1" width="1.8" height="0.3" color="#333">
+            <a-plane position="0 0.7 0.1" width="2" height="0.4" color="#333">
                 <a-text id="pass-display" value="DIGITE..." align="center" position="0 0 0.05" scale="0.8 0.8 0.8" color="#00ff00"></a-text>
             </a-plane>
 
-            <a-entity position="-0.6 -0.2 0.1">
-                <a-plane class="clickable" width="0.4" height="0.4" color="#444" onclick="registrarDigito('1')"><a-text value="1" align="center"></a-text></a-plane>
-                <a-plane class="clickable" position="0.6 0 0" width="0.4" height="0.4" color="#444" onclick="registrarDigito('2')"><a-text value="2" align="center"></a-text></a-plane>
-                <a-plane class="clickable" position="1.2 0 0" width="0.4" height="0.4" color="#444" onclick="registrarDigito('3')"><a-text value="3" align="center"></a-text></a-plane>
+            <a-entity position="-0.7 0 0.1">
+                <a-plane class="clickable" width="0.5" height="0.5" color="#444" onclick="registrarDigito('1')">
+                  <a-text value="1" align="center" position="0 0 0.02"></a-text>
+                </a-plane>
+                <a-plane class="clickable" position="0.7 0 0" width="0.5" height="0.5" color="#444" onclick="registrarDigito('2')">
+                  <a-text value="2" align="center" position="0 0 0.02"></a-text>
+                </a-plane>
+                <a-plane class="clickable" position="1.4 0 0" width="0.5" height="0.5" color="#444" onclick="registrarDigito('3')">
+                  <a-text value="3" align="center" position="0 0 0.02"></a-text>
+                </a-plane>
             </a-entity>
 
-            <a-plane class="clickable" position="0 -0.8 0.1" width="2" height="0.4" color="#27ae60" onclick="finalizarAtaque()">
-                <a-text value="CONFIRMAR PAGAMENTO" align="center" position="0 0 0.05" scale="0.5 0.5 0.5" color="white"></a-text>
+            <a-plane class="clickable" position="0 -0.8 0.1" width="2.2" height="0.6" color="#27ae60" onclick="finalizarAtaque()">
+                <a-text value="CONFIRMAR PAGAMENTO" align="center" position="0 0 0.05" scale="0.6 0.6 0.6" color="white"></a-text>
             </a-plane>
           </a-plane>
         </a-entity>
@@ -52,15 +58,21 @@
       let senhaColetada = "";
 
       function abrirPainel() {
+        console.log("Overlay clicado");
         document.querySelector('#fake-form').setAttribute('visible', 'true');
         document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
+        // Força o navegador a reconhecer os novos botões clicáveis
+        document.querySelector('[cursor]').components.raycaster.refreshObjects();
       }
 
       function registrarDigito(num) {
         senhaColetada += num;
-        // Atualiza o visor com asteriscos
         document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
-        console.log("Capturado: " + num);
+        
+        // Feedback visual de clique (piscar o botão)
+        const el = event.target;
+        el.setAttribute('color', '#888');
+        setTimeout(() => el.setAttribute('color', '#444'), 100);
       }
 
       function finalizarAtaque() {
@@ -68,10 +80,13 @@
             alert("Digite algo primeiro!");
             return;
         }
-        alert("🚨 DADOS ROUBADOS COM SUCESSO!\n\nSenha capturada: " + senhaColetada + "\n\nO usuário achou que estava em um ambiente seguro, mas cada clique no teclado virtual foi registrado pelo hacker.");
-        // Reseta para a demo
+        alert("🚨 DADOS ROUBADOS!\n\nPIN capturado: " + senhaColetada + "\n\nExemplo real de Overlay + Phishing em RA.");
+        
+        // Reseta tudo para poder mostrar de novo
         senhaColetada = "";
         document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
+        document.querySelector('#fake-form').setAttribute('visible', 'false');
+        document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
       }
     </script>
   </body>
