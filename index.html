@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Demo Cibersegurança - Imagem Flutuante em AR</title>
+    <title>Demo Final - Cibersegurança RA</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
@@ -10,63 +10,57 @@
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
-        <img id="btnBanco" src="botao_banco2.png">
+        <img id="btnBanco" src="PAGUE R$100 PARA CONTINUAR JOGANDO.png">
       </a-assets>
 
       <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
-     <a-marker type="pattern" url="marker.patt">
+      <a-marker type="pattern" url="marker.patt">
+        
+        <a-image id="btn-orig" src="#btnBanco" 
+                 position="0 0.5 0" 
+                 rotation="-90 0 0" 
+                 width="2.5" height="0.8">
+        </a-image>
 
-  <a-image id="btn-orig" src="#btnBanco" position="0 0.5 0" rotation="-90 0 0" width="2.5" height="0.8"></a-image>
+        <a-plane id="malicious-overlay" 
+                 class="clickable"
+                 position="0 0.52 0" 
+                 rotation="-90 0 0" 
+                 width="2.6" height="0.9" 
+                 material="opacity: 0.3; color: red"
+                 onclick="abrirFormulario()">
+        </a-plane>
 
-  <a-plane id="malicious-overlay" 
-           class="clickable"
-           position="0 0.55 0" rotation="-90 0 0" 
-           width="2.6" height="0.9" 
-           material="opacity: 0.2; color: #ff0000"
-           onclick="abrirFormulario()">
-  </a-plane>
-
-  <a-entity id="fake-form" position="0 1 -0.5" rotation="-45 0 0" visible="false">
-    <a-plane width="2.5" height="1.8" color="#1a1a1a" material="opacity: 0.9">
-      <a-text value="CONFIRME SUA SENHA PIX" align="center" position="0 0.6 0.1" scale="0.5 0.5 0.5" color="white"></a-text>
-      
-      <a-text id="digits" value="****" align="center" position="0 0.1 0.1" scale="1 1 1" color="#00ff00"></a-text>
-
-      <a-plane class="clickable" position="-0.6 -0.5 0.1" width="0.4" height="0.4" color="#333" onclick="digitar()">
-        <a-text value="1" align="center" position="0 0 0.05"></a-text>
-      </a-plane>
-      <a-plane class="clickable" position="0 -0.5 0.1" width="0.4" height="0.4" color="#333" onclick="digitar()">
-        <a-text value="2" align="center" position="0 0 0.05"></a-text>
-      </a-plane>
-      <a-plane class="clickable" position="0.6 -0.5 0.1" width="0.4" height="0.4" color="#333" onclick="digitar()">
-        <a-text value="3" align="center" position="0 0 0.05"></a-text>
-      </a-plane>
-
-      <a-text value="DIGITE PARA AUTORIZAR" align="center" position="0 -0.8 0.1" scale="0.3 0.3 0.3" color="#aaa"></a-text>
-    </a-plane>
-  </a-entity>
-
-</a-marker>
-
-<script>
-  function abrirFormulario() {
-    // Esconde o overlay e mostra o formulário de roubo de senha
-    document.querySelector('#fake-form').setAttribute('visible', 'true');
-    document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
-  }
-
-  function digitar() {
-    alert("⚠️ DADO CAPTURADO!\n\nO atacante acabou de registrar o que você digitou no teclado virtual falso.\n\nIsso é um Keylogger em Realidade Aumentada.");
-  }
-</script>
+        <a-entity id="fake-form" position="0 1.2 -0.5" rotation="-45 0 0" visible="false">
+          <a-plane width="2.8" height="2" color="#1a1a1a" material="opacity: 0.95">
+            <a-text value="SISTEMA BLOQUEADO" align="center" position="0 0.7 0.1" scale="0.6 0.6 0.6" color="red"></a-text>
+            <a-text value="DIGITE SUA SENHA PARA PAGAR" align="center" position="0 0.3 0.1" scale="0.4 0.4 0.4" color="white"></a-text>
+            
+            <a-plane class="clickable" position="0 -0.4 0.1" width="2" height="0.5" color="#333" onclick="digitar()">
+              <a-text value="[ CONFIRMAR ]" align="center" position="0 0 0.05" scale="0.6 0.6 0.6" color="#00ff00"></a-text>
+            </a-plane>
+          </a-plane>
+        </a-entity>
+        
+      </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      function showHackAlert() {
-        alert("⚠️ ATAQUE DE OVERLAY CONFIRMADO!\n\nA interface bancária flutuante é real, mas você interagiu com uma camada maliciosa invisível que sobrepõe a imagem legítima.\n\nEste é um exemplo clássico de 'AR Overlay Attack' em cibersegurança.");
+      // Garante que as funções existem ANTES do clique
+      function abrirFormulario() {
+        console.log("Overlay clicado!");
+        const form = document.querySelector('#fake-form');
+        const overlay = document.querySelector('#malicious-overlay');
+        
+        form.setAttribute('visible', 'true');
+        overlay.setAttribute('visible', 'false');
+      }
+
+      function digitar() {
+        alert("⚠️ ATAQUE CONCLUÍDO!\n\nDados capturados pelo formulário falso.\n\nIsso mostra como o Overlay pode evoluir para um roubo de credenciais completo.");
       }
     </script>
   </body>
