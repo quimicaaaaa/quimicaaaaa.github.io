@@ -68,21 +68,30 @@
         }
 
         // Função para postar
-        async function enviarPost() {
-            const conteudo = document.getElementById('texto-post').value;
-            const autor = document.getElementById('nome-autor').value || 'Anônimo';
+       async function enviarPost() {
+    // 1. Trava da senha
+    const senha = prompt("Qual é a senha secreta da galera?");
+    if (senha !== "1234") { 
+        alert("Senha errada, maninho!");
+        return;
+    } // <-- Note que esta chave fecha o 'if', não a função inteira!
 
-            if (!conteudo) return alert("Escreva algo!");
+    // 2. Pega os dados dos inputs
+    const conteudo = document.getElementById('texto-post').value;
+    const autor = document.getElementById('nome-autor').value || 'Anônimo';
 
-            const { error } = await supabase
-                .from('posts')
+    if (!conteudo) return alert("Escreva algo!");
+
+    // 3. Envia para o banco
+    const { error } = await supabase
+        .from('posts')
                 .insert([{ autor, conteudo }]);
 
-            if (!error) {
-                document.getElementById('texto-post').value = '';
-                carregarPosts();
-            }
-        }
+    if (!error) {
+        document.getElementById('texto-post').value = '';
+        carregarPosts();
+    }
+} // <-- A chave da função só fecha aqui no final!
 
         // Função para curtir
         async function curtir(id, curtidasAtuais) {
