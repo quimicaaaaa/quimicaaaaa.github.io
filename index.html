@@ -2,139 +2,83 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosso Canto ✨</title>
+    <title>Teste do Mural</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .post-card { background: #1e293b; border: 1px solid #334155; transition: 0.3s; }
-        .post-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
-    </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-slate-900 text-white p-10">
 
-    <div class="max-w-4xl mx-auto">
-        <header class="flex justify-between items-center mb-10">
-            <h1 class="text-3xl font-bold text-sky-400 font-mono">/nosso-canto/</h1>
-            <p class="text-xs text-slate-500">v1.0 stable</p>
-        </header>
+    <div class="max-w-xl mx-auto bg-slate-800 p-6 rounded-xl shadow-2xl">
+        <h1 class="text-2xl mb-4 text-sky-400 font-bold">Postar no Mural</h1>
+        
+        <input id="nome-autor" type="text" placeholder="Seu nome" class="w-full mb-2 p-2 rounded bg-slate-700 border-none">
+        <textarea id="texto-post" placeholder="Mensagem..." class="w-full p-2 rounded bg-slate-700 border-none"></textarea>
+        
+        <button onclick="enviarPost()" class="w-full mt-4 bg-sky-600 p-3 rounded font-bold hover:bg-sky-500">
+            PUBLICAR AGORA
+        </button>
 
-        <div class="bg-slate-800 p-6 rounded-2xl mb-8 shadow-2xl border border-slate-700">
-            <textarea id="texto-post" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-sky-500 text-white" rows="3" placeholder="O que está rolando hoje?"></textarea>
-            
-            <div class="flex flex-col md:flex-row justify-between mt-4 gap-4">
-                <input id="nome-autor" type="text" placeholder="Seu apelido" class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-sky-500">
-                <button onclick="enviarPost()" class="bg-sky-600 hover:bg-sky-500 px-8 py-2 rounded-lg font-bold transition-all shadow-lg shadow-sky-900/20">
-                    Publicar 🚀
-                </button>
+        <div id="feed" class="mt-10 space-y-4">
             </div>
-        </div>
-
-        <div id="feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="col-span-full text-center py-10 text-slate-500 italic">
-                Buscando mensagens no servidor...
-            </div>
-        </div>
     </div>
 
     <script>
-        // --- 1. CONFIGURAÇÃO (SUBSTITUA AQUI) ---
+        // SUBSTITUA ESTAS DUAS LINHAS COM SEUS DADOS
         const SUPABASE_URL = 'https://ydvrfyztxfehldkviqlx.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_jLadz9tvYQVA0t6w-Usstw_p6WNUIsc';
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- 2. FUNÇÃO PARA CARREGAR POSTS ---
-        async function carregarPosts() {
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false });
+        const supabaseClient = supabase.createClient(URL, KEY);
 
-            if (error) {
-                console.error("Erro ao carregar:", error);
+        // FUNÇÃO DE TESTE IMEDIATO
+        console.log("O script carregou com sucesso!");
+
+        async function enviarPost() {
+            console.log("Botão clicado!");
+            
+            const autor = document.getElementById('nome-autor').value || 'Anônimo';
+            const conteudo = document.getElementById('texto-post').value;
+
+            if (!conteudo) {
+                alert("Escreva algo!");
                 return;
             }
 
-            const feed = document.getElementById('feed');
-            if (data.length === 0) {
-                feed.innerHTML = '<p class="col-span-full text-center text-slate-500">Nenhum post ainda. Seja o primeiro!</p>';
+            const senha = prompt("Senha da galera:");
+            if (senha !== "1234") {
+                alert("Senha errada!");
                 return;
             }
 
-            feed.innerHTML = '';
-            data.forEach(post => {
-                const dataFormatada = new Date(post.created_at).toLocaleString('pt-BR');
-                feed.innerHTML += `
-                    <div class="post-card p-6 rounded-2xl shadow-xl">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-sky-400 font-bold font-mono">@${post.autor}</span>
-                            <span class="text-[10px] uppercase tracking-widest text-slate-500">${dataFormatada}</span>
-                        </div>
-                        <p class="text-slate-300 text-sm leading-relaxed">${post.conteudo}</p>
-                        <div class="mt-4 flex items-center gap-4">
-                            <button onclick="curtir(${post.id}, ${post.curtidas})" class="text-slate-500 hover:text-pink-500 transition-colors text-sm flex items-center gap-1">
-                                ❤️ <span>${post.curtidas || 0}</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
+            try {
+                const { error } = await supabaseClient
+                    .from('posts')
+                    .insert([{ autor, conteudo }]);
+
+                if (error) throw error;
+
+                alert("Postado com sucesso!");
+                document.getElementById('texto-post').value = '';
+                carregar();
+            } catch (err) {
+                console.error("Erro no Supabase:", err);
+                alert("Erro: " + err.message);
+            }
+        }
+
+        async function carregar() {
+            const { data, error } = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false });
+            if (error) return;
+            
+            const div = document.getElementById('feed');
+            div.innerHTML = '';
+            data.forEach(p => {
+                div.innerHTML += `<div class="p-4 bg-slate-700 rounded-lg">
+                    <b class="text-sky-400">@${p.autor}</b>: ${p.conteudo}
+                </div>`;
             });
         }
 
-        // --- 3. FUNÇÃO PARA ENVIAR POST ---
-        async function enviarPost() {
-    console.log("Botão clicado!"); // Adicione esta linha
-    alert("O botão funciona!");
-            const campoTexto = document.getElementById('texto-post');
-            const campoAutor = document.getElementById('nome-autor');
-            
-            const conteudo = campoTexto.value.trim();
-            const autor = campoAutor.value.trim() || 'Anônimo';
-
-            if (!conteudo) {
-                alert("Escreva alguma coisa, né?");
-                return;
-            }
-
-            // Trava de segurança simples para evitar spam de estranhos
-            const senha = prompt("Senha da Galera:");
-            if (senha !== "1234") { // Mude "1234" para sua senha secreta
-                alert("Senha incorreta!");
-                return;
-            }
-
-            // Envia para a tabela 'posts' no Supabase
-            const { error } = await supabase
-                .from('posts')
-                .insert([{ autor, conteudo, curtidas: 0 }]);
-
-            if (error) {
-                console.error("Erro:", error);
-                alert("Erro ao salvar: " + error.message);
-            } else {
-                campoTexto.value = '';
-                carregarPosts(); // Atualiza a tela
-            }
-        }
-
-        // --- 4. FUNÇÃO PARA CURTIR ---
-        async function curtir(id, curtidasAtuais) {
-            const { error } = await supabase
-                .from('posts')
-                .update({ curtidas: (curtidasAtuais || 0) + 1 })
-                .eq('id', id);
-            
-            if (!error) carregarPosts();
-        }
-
-        // Inicialização
-        carregarPosts();
-        
-        // Atualiza o feed automaticamente a cada 30 segundos
-        setInterval(carregarPosts, 30000);
-
+        carregar();
     </script>
 </body>
 </html>
