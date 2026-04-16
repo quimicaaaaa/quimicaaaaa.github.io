@@ -5,25 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ARQUEIRO DIGITAL v4.0</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: sans-serif; background: #000; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; background: #000; }
         video { width: 100vw; height: 100vh; object-fit: cover; }
         #hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         
-        .status { color: #00FF00; position: absolute; top: 20px; left: 20px; font-size: 28px; font-weight: bold; text-shadow: 2px 2px black; }
-        
-        /* Estágio 1: Censura */
-        .censura { 
-            position: absolute; top: 30%; left: 10%; width: 80%; height: 25%; 
-            background: rgba(0,0,0,0.95); display: none; border: 5px solid red; 
-            color: white; text-align: center; font-size: 30px; font-weight: bold;
-            flex-direction: column; justify-content: center; align-items: center;
+        /* Status do Topo */
+        .status { 
+            color: #00FF00; position: absolute; top: 30px; left: 30px; 
+            font-size: 32px; font-weight: 900; text-shadow: 3px 3px 5px black; 
         }
 
-        /* Estágio 3: Grace Period */
+        /* Estágio 1: Censura (Borrão Vermelho) */
+        .censura { 
+            position: absolute; top: 30%; left: 5%; width: 90%; height: 25%; 
+            background: rgba(0,0,0,0.95); display: none; border: 8px solid red; 
+            color: white; text-align: center; font-size: 35px; font-weight: bold;
+            flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 0 30px red;
+        }
+
+        /* Estágio 2: Acesso Liberado (Feedback Verde) */
+        .liberado {
+            position: absolute; top: 40%; left: 10%; width: 80%;
+            background: rgba(0, 255, 0, 0.9); color: #000;
+            padding: 20px; text-align: center; font-size: 40px; font-weight: 900;
+            display: none; border-radius: 20px;
+        }
+
+        /* Estágio 3: Grace Period (Alerta Amarelo) */
         .grace { 
-            background: yellow; color: #000; position: absolute; bottom: 15%; 
-            left: 5%; width: 90%; padding: 20px 0; text-align: center; 
-            display: none; font-size: 35px; font-weight: 900; border-radius: 10px;
+            background: #ffe600; color: #000; position: absolute; bottom: 10%; 
+            left: 5%; width: 90%; padding: 30px 0; text-align: center; 
+            display: none; font-size: 40px; font-weight: 900; border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
     </style>
 </head>
@@ -31,13 +45,18 @@
     <video id="webcam" autoplay playsinline></video>
     <div id="hud">
         <div class="status">● IA GUARDIA: ATIVA<br>● BATERIA: 9h 45m</div>
-        <div id="boxCensura" class="censura">DADO CONFIDENCIAL<br><span style="font-size:15px">BLOQUEADO POR SEGURANÇA</span></div>
-        <div id="msgGrace" class="grace">⚠️ GRACE PERIOD: 15:00</div>
+        
+        <div id="boxCensura" class="censura">DADO CONFIDENCIAL<br><span style="font-size:20px">BLOQUEADO NA BORDA</span></div>
+        
+        <div id="msgLiberado" class="liberado">ACESSO LIBERADO<br><span style="font-size:20px">NFC VALIDADO</span></div>
+        
+        <div id="msgGrace" class="grace">⚠️ CONEXÃO PERDIDA<br>GRACE PERIOD: 15:00</div>
     </div>
 
     <script>
         const video = document.getElementById('webcam');
         const box = document.getElementById('boxCensura');
+        const liberado = document.getElementById('msgLiberado');
         const grace = document.getElementById('msgGrace');
 
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
@@ -47,20 +66,27 @@
         document.body.onclick = () => {
             passo++;
             if (passo === 1) {
-                // MOSTRA CENSURA
+                // PRIMEIRO TOQUE: CENSURA ATIVA
                 box.style.display = 'flex';
+                liberado.style.display = 'none';
                 grace.style.display = 'none';
             } else if (passo === 2) {
-                // DESBLOQUEIA (NFC) - TELA LIMPA
+                // SEGUNDO TOQUE: NFC USADO -> LIBERA ACESSO
                 box.style.display = 'none';
+                liberado.style.display = 'block';
                 grace.style.display = 'none';
+                
+                // Faz a mensagem de "Liberado" sumir depois de 3 segundos para o técnico trabalhar
+                setTimeout(() => { liberado.style.display = 'none'; }, 3000);
             } else if (passo === 3) {
-                // CAI O SINAL - MOSTRA GRACE PERIOD
+                // TERCEIRO TOQUE: SINAL CAI -> GRACE PERIOD
                 box.style.display = 'none';
+                liberado.style.display = 'none';
                 grace.style.display = 'block';
             } else {
                 // RESET
                 box.style.display = 'none';
+                liberado.style.display = 'none';
                 grace.style.display = 'none';
                 passo = 0;
             }
