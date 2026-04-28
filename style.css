@@ -843,7 +843,7 @@ body{
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     .flowers {
-        transform: scale(0.75) !important;
+        transform: scale(1.1) !important;
         transform-origin: bottom center !important;
     }
 
