@@ -123,6 +123,7 @@ body{
 .flowers {
     position: relative;
     transform: scale(0.9);
+    transform-origin: bottom center;
 }
 
 .flower {
@@ -842,8 +843,8 @@ body{
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     .flowers {
-        transform: scale(0.75);
-        transform-origin: bottom center;
+        transform: scale(0.75) !important;
+        transform-origin: bottom center !important;
     }
 
     .envelope-wrapper {
