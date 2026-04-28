@@ -247,7 +247,7 @@ body{
 
 /* ✅ TRONCO VERDE */
 .stem {
-    height: 55vmin;
+    height: 75vmin;
     width: 1.5vmin;
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)),
                         linear-gradient(to top, transparent 10%, #166534, #22c55e);
@@ -281,7 +281,7 @@ body{
     transform: rotate(70deg) rotateY(30deg);
 }
 .stem-right-1 { top: 20%; left: 90%; transform: rotate(70deg) rotateY(30deg); }
-.stem-right-2 { top: 45%; left: 90%; transform: rotate(70deg) rotateY(30deg); }
+.stem-right-2 { top: 40%; left: 90%; transform: rotate(70deg) rotateY(30deg); }
 
 .stem-left-1, .stem-left-2, .stem-small-left-1 {
     border-top-right-radius: 0;
@@ -704,7 +704,7 @@ body{
 /* ===== ENVELOPE ===== */
 .envelope-wrapper {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 999;
