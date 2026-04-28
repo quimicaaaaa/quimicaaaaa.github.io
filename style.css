@@ -838,3 +838,69 @@ body{
     0%, 100% { opacity: 0.4; }
     50% { opacity: 1; }
 }
+
+/* ===== MOBILE ===== */
+@media (max-width: 480px) {
+    .flowers {
+        transform: scale(1.6);
+        transform-origin: bottom center;
+    }
+
+    .stem {
+        height: 55vmax;
+    }
+
+    .petal {
+        width: 8vmax;
+        height: 11vmax;
+    }
+
+    .flower-center {
+        left: -3.5vmax;
+        top: -3vmax;
+        width: 9vmax;
+        height: 4vmax;
+    }
+
+    .envelope-wrapper {
+        bottom: 16px;
+    }
+
+    .envelope {
+        width: 200px;
+        height: 135px;
+    }
+
+    .envelope-bottom {
+        border-left-width: 100px;
+        border-right-width: 100px;
+        border-bottom-width: 75px;
+    }
+
+    .envelope-left {
+        border-left-width: 100px;
+        border-top-width: 67px;
+        border-bottom-width: 67px;
+    }
+
+    .envelope-right {
+        border-right-width: 100px;
+        border-top-width: 67px;
+        border-bottom-width: 67px;
+    }
+
+    .envelope-flap {
+        border-left-width: 100px;
+        border-right-width: 100px;
+        border-top-width: 75px;
+    }
+
+    .letter {
+        width: 160px;
+        font-size: 11px;
+    }
+
+    .envelope.open .letter {
+        transform: translateX(-50%) translateY(-210px);
+    }
+}
