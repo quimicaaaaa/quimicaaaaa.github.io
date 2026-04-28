@@ -842,24 +842,24 @@ body{
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     .flowers {
-        transform: scale(0.85);
+        transform: scale(0.9);
         transform-origin: bottom center;
     }
 
     .stem {
-        height: 28vmax;
+        height: 28vmin !important;
     }
 
     .petal {
-        width: 8vmax;
-        height: 11vmax;
+        width: 5vmin;
+        height: 7vmin;
     }
 
     .flower-center {
-        left: -3.5vmax;
-        top: -3vmax;
-        width: 9vmax;
-        height: 4vmax;
+        left: -2.5vmin;
+        top: -2vmin;
+        width: 6vmin;
+        height: 3vmin;
     }
 
     .envelope-wrapper {
