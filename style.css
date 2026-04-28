@@ -842,12 +842,12 @@ body{
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     .flowers {
-        transform: scale(1.6);
+        transform: scale(1.2);
         transform-origin: bottom center;
     }
 
     .stem {
-        height: 55vmax;
+        height: 38vmax;
     }
 
     .petal {
