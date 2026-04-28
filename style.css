@@ -247,7 +247,7 @@ body{
 
 /* ✅ TRONCO VERDE */
 .stem {
-    height: 75vmin;
+    height: 55vmin;
     width: 1.5vmin;
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)),
                         linear-gradient(to top, transparent 10%, #166534, #22c55e);
@@ -842,65 +842,45 @@ body{
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     .flowers {
-        transform: scale(0.9);
+        transform: scale(0.5);
         transform-origin: bottom center;
     }
 
-    .stem {
-        height: 28vmin !important;
-    }
-
-    .petal {
-        width: 5vmin;
-        height: 7vmin;
-    }
-
-    .flower-center {
-        left: -2.5vmin;
-        top: -2vmin;
-        width: 6vmin;
-        height: 3vmin;
-    }
-
-    .envelope-wrapper {
-        bottom: 16px;
-    }
-
     .envelope {
-        width: 200px;
-        height: 135px;
+        width: 180px;
+        height: 120px;
     }
 
     .envelope-bottom {
-        border-left-width: 100px;
-        border-right-width: 100px;
-        border-bottom-width: 75px;
+        border-left-width: 90px;
+        border-right-width: 90px;
+        border-bottom-width: 68px;
     }
 
     .envelope-left {
-        border-left-width: 100px;
-        border-top-width: 67px;
-        border-bottom-width: 67px;
+        border-left-width: 90px;
+        border-top-width: 60px;
+        border-bottom-width: 60px;
     }
 
     .envelope-right {
-        border-right-width: 100px;
-        border-top-width: 67px;
-        border-bottom-width: 67px;
+        border-right-width: 90px;
+        border-top-width: 60px;
+        border-bottom-width: 60px;
     }
 
     .envelope-flap {
-        border-left-width: 100px;
-        border-right-width: 100px;
-        border-top-width: 75px;
+        border-left-width: 90px;
+        border-right-width: 90px;
+        border-top-width: 68px;
     }
 
     .letter {
-        width: 160px;
+        width: 150px;
         font-size: 11px;
     }
 
     .envelope.open .letter {
-        transform: translateX(-50%) translateY(-210px);
+        transform: translateX(-50%) translateY(-200px);
     }
 }
